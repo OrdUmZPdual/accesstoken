@@ -1,0 +1,7 @@
+base   accesstoken
+author Lukas Schladebach
+email  cw982320@charlottenburg-wilmersdorf.de
+date   2025-02-14
+name   Accesstoken Plugin
+desc   Share-Plugin für den Zugriff auf einzelne Seiten durch Fremde
+url    https://www.berlin.de/ba-charlottenburg-wilmersdorf/politik/bezirksamt/abteilung-ordnung-umwelt-strassen-und-gruenflaechen/
