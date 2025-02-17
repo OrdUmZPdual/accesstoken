@@ -13,36 +13,34 @@ document.addEventListener("DOMContentLoaded", function () {
         tools.appendChild(shareBtn);
     }
 
-    // Event-Listener NUR EINMAL registrieren!
-    document.body.removeEventListener("click", generateShareLink); // Falls doppelt
-    document.body.addEventListener("click", generateShareLink);
-});
+    document.body.addEventListener("click", async function (e) {
+        let target = e.target.closest("#share-btn");
+        if (!target) return;
 
-async function generateShareLink(e) {
-    let target = e.target.closest("#share-btn");
-    if (!target) return;
+        e.preventDefault();
+        console.log("✅ Button wurde geklickt!");
 
-    e.preventDefault();
-    console.log("✅ Button wurde geklickt!");
+        let urlParams = new URLSearchParams(window.location.search);
+        let page = urlParams.get("id") || "start";
 
-    let urlParams = new URLSearchParams(window.location.search);
-    let page = urlParams.get("id") || "start"; // Falls keine ID vorhanden, nutze "start"
-    page = decodeURIComponent(page).replace(/:/g, "/").trim(); // Namensräume angleichen
+        // 🔥 Fix 1: `:` statt `/` in der ID für DokuWiki
+        page = decodeURIComponent(page).replace(/\//g, ":").trim();
 
-    let token = await sha256(page + Date.now());
-    let baseUrl = "http://halvar01.ba-cw.verwalt-berlin.de/OrdUm-ZP_Wiki/";
-    let shareUrl = baseUrl + "doku.php?id=" + page + "&token=" + token;
+        // 🔥 Fix 2: Base-URL inkl. `/OrdUm-ZP_Wiki/` setzen
+        let baseUrl = window.location.origin + "/OrdUm-ZP_Wiki/";
 
-    
-    console.log("🔗 Generierter Link:", shareUrl);
+        let token = await sha256(page + Date.now());
+        let shareUrl = baseUrl + "doku.php?id=" + page + "&token=" + token;
+        
+        console.log("🔗 Generierter Link:", shareUrl);
 
-    // Nachricht nur EINMAL anzeigen
-    alert("🔗 Link kopiert:\n" + shareUrl);
-    
-    navigator.clipboard.writeText(shareUrl).catch(err => {
-        console.error("❌ Fehler beim Kopieren:", err);
+        navigator.clipboard.writeText(shareUrl).then(() => {
+            alert("🔗 Link kopiert:\n" + shareUrl);
+        }).catch(err => {
+            console.error("❌ Fehler beim Kopieren:", err);
+        });
     });
-}
+});
 
 // Hash-Funktion (SHA-256)
 async function sha256(str) {
