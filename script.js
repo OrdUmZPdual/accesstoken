@@ -30,7 +30,9 @@ async function generateShareLink(e) {
     page = decodeURIComponent(page).replace(/:/g, "/").trim(); // Namensräume angleichen
 
     let token = await sha256(page + Date.now());
-    let shareUrl = DOKU_BASE + "doku.php?id=" + page + "&token=" + token;
+    let baseUrl = "http://halvar01.ba-cw.verwalt-berlin.de/";
+    let shareUrl = baseUrl + "doku.php?id=" + page + "&token=" + token;
+
     
     console.log("🔗 Generierter Link:", shareUrl);
 
